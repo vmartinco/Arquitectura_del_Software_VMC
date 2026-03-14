@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Servicios del coche</title>
+</head>
+<body>
+    <h1>Servicios del {{ coche.marca }} {{ coche.modelo }}</h1>
+
+    {% if cocheServicio %}
+        <ul>
+            {% for servicio in cocheServicio %}
+                <li>Servicio de: {{ servicio.servicio }} - Fecha: {{ servicio.fecha }} </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Este coche no tiene servicios</p>
+    {% endif %}
+</body>
+</html>

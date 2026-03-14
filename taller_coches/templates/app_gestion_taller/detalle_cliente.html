@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle del cliente</title>
+</head>
+<body>
+    <h1>Detalle {{ cliente.nombre }}</h1>
+
+    <p>{{ cliente.apellido }}</p>
+    <p>{{ cliente.email }}</p>
+    <p>{{ cliente.telefono }}</p>
+
+    <h2>Coches del cliente</h2>
+
+    {% if coches %}
+        <ul>
+            {% for coche in coches %}
+                <li>{{ coche.marca }} - {{ coche.modelo }} -
+                    <a href="{% url 'detalleCocheServicio' coche.id %}">{{ coche.matricula }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No se encontraron coches del cliente</p>
+    {% endif %}
+</body>
+</html>

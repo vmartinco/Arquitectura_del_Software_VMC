@@ -6,16 +6,45 @@ import json
 from .models import Cliente, Coche, Servicio, CocheServicio
 
 def vista_clientes(request):
-    clientes = list(Cliente.objects.values("id", "nombre", "telefono", "email"))
-    return JsonResponse(clientes, safe=False)
+    #VISTA ANTIGUA SIN TEMPLATES
+    #clientes = list(Cliente.objects.values("id", "nombre", "telefono", "email"))
+    #return JsonResponse(clientes, safe=False)
+    # VISTA ANTIGUA CON TEMPLATES
+    clientes = Cliente.objects.all()
+    return render(request, 'app_gestion_taller/lista_clientes.html',
+                  {'clientes': clientes})
 
 def detalle_cliente(request, cliente_id):
+    # VISTA ANTIGUA SIN TEMPLATES
+#    try:
+#        cliente = (Cliente.objects.values("id", "nombre", "telefono", "email")
+#                                  .get(id=cliente_id))
+#        return JsonResponse(cliente)
+#    except Cliente.DoesNotExist:
+#        return JsonResponse({"error": "Cliente no existente"}, status=404)
+    # VISTA ANTIGUA CON TEMPLATES
     try:
-        cliente = (Cliente.objects.values("id", "nombre", "telefono", "email")
-                                  .get(id=cliente_id))
-        return JsonResponse(cliente)
+        cliente = Cliente.objects.get(id=cliente_id)
+        coches = Coche.objects.filter(cliente=cliente)
+        contexto = {
+            'cliente': cliente,
+            'coches': coches,
+        }
+        return render(request, 'app_gestion_taller/detalle_cliente.html', contexto)
     except Cliente.DoesNotExist:
-        return JsonResponse({"error": "Cliente no existente"}, status=404)
+        return JsonResponse({"error": "Cliente no encontrado"}, status=404)
+
+def detalleCocheServicio(request, coche_id):
+    try:
+        coche = Coche.objects.get(id=coche_id)
+        cocheServicio = CocheServicio.objects.filter(coche=coche)
+        contexto = {
+            'coche': coche,
+            'cocheServicio': cocheServicio,
+        }
+        return render(request, 'app_gestion_taller/detalle_coche_servicio.html', contexto)
+    except CocheServicio.DoesNotExist:
+        return JsonResponse({"error": "El Coche no tiene servicios"}, status=404)
 
 #PRACTICA 4
 

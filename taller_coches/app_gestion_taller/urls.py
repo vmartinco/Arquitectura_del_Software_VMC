@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     path('clientes', views.vista_clientes, name='clientes'),
     path('clientes/<int:cliente_id>/', views.detalle_cliente, name='detalle'),
+    path('servicios/<int:coche_id>/', views.detalleCocheServicio, name='detalleCocheServicio'),
 
     #URLS PRACTICA 4
     path('clientes/registrar/', views.registrar_cliente, name='registrar_cliente'),
