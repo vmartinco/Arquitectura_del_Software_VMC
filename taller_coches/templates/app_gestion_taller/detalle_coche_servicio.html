@@ -16,5 +16,7 @@
     {% else %}
         <p>Este coche no tiene servicios</p>
     {% endif %}
+
+    <a href="{% url 'nuevo_servicio' coche.id %}">Añadir Servicio al Coche</a>
 </body>
 </html>

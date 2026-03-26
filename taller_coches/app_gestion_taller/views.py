@@ -1,8 +1,10 @@
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 import json
+
+from .forms import ClienteForm, CocheForm, ServicioForm
 from .models import Cliente, Coche, Servicio, CocheServicio
 
 def vista_clientes(request):
@@ -123,3 +125,52 @@ def buscarCochesByMarcaAndCliente(request, marca, cliente_id):
 
     except Coche.DoesNotExist:
         return JsonResponse({"error": "Coche no encontrado"}, status=404)
+
+#VISTAS PRACTICA 6
+def nuevo_cliente(request):
+    if request.method == 'POST':
+        form = ClienteForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('clientes')
+    else:
+        form = ClienteForm()
+
+    return render(request, 'app_gestion_taller/formulario_clientes.html',
+                  {'form': form, 'titulo': 'Nuevo cliente'})
+
+def nuevo_coche(request, cliente_id):
+    if request.method == 'POST':
+        form = CocheForm(request.POST)
+        cliente = Cliente.objects.get(id=cliente_id)
+        if form.is_valid():
+            Coche.objects.create(
+                cliente=cliente,
+                modelo=form.cleaned_data['modelo'],
+                marca=form.cleaned_data['marca'],
+                matricula=form.cleaned_data['matricula']
+            )
+
+            return redirect('detalle', cliente_id=cliente_id)
+    else:
+        form = CocheForm()
+
+    return render(request, 'app_gestion_taller/formulario_coches.html',
+                  {'form': form, 'titulo': 'Nuevo coche'})
+
+def nuevo_servicio(request, coche_id):
+    if request.method == 'POST':
+        form = ServicioForm(request.POST)
+        if form.is_valid():
+            coche = Coche.objects.get(id=coche_id)
+            servicio = Servicio.objects.create(
+                nombre=form.cleaned_data['nombre'],
+                descripcion=form.cleaned_data['descripcion']
+            )
+            CocheServicio.objects.create(coche=coche, servicio=servicio)
+            return redirect('detalleCocheServicio', coche_id=coche_id)
+    else:
+        form = ServicioForm()
+
+    return render(request, 'app_gestion_taller/formulario_servicios.html',
+                  {"form": form, 'titulo': 'Nuevo servicio'})

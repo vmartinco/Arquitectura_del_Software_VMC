@@ -13,4 +13,9 @@ urlpatterns = [
     path('servicios/registrar/', views.registrar_servicio, name='registrar_servicio'),
     path('coches/buscarCochesByMarca/<str:marca>/', views.buscarCochesByMarca, name='buscarCochesByMarca'),
     path('coches/buscarCochesByMarcaAndCliente/<str:marca>/<int:cliente_id>/', views.buscarCochesByMarcaAndCliente, name='buscarCochesByMarcaAndCliente'),
+
+    #URLS PRÁCTICA 6
+    path('clientes/nuevo/', views.nuevo_cliente, name='nuevo_cliente'),
+    path('clientes/<int:cliente_id>/coches/nuevo/', views.nuevo_coche, name='nuevo_coche'),
+    path('servicios/<int:coche_id>/nuevo/', views.nuevo_servicio, name='nuevo_servicio')
 ]
